@@ -1,0 +1,31 @@
+{
+  "name": "iTake",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Experimental chrome extension for glom service protocol.",
+  "homepage_url": "http://extensionizr.com",
+  "icons": {
+    "16": "icons/glom16.ico"
+  },
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": true
+  },
+  "options_ui": {
+      "page": "html/options.html",
+      "chrome_style": true
+  },
+  "permissions": [
+    "contextMenus",
+    "storage"
+  ],
+  "content_scripts": [
+      {
+          "matches": ["<all_urls>"],
+          "js": ["js/pico_modal.min.js", "js/taggle.min.js", "js/awesomplete.testing.js", "js/md5.min.js", "js/inject.js"],
+          "css": ["css/awesomplete.css", "css/inject.css"]
+      }
+  ]
+}
