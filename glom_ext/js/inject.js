@@ -92,9 +92,33 @@ function tagMedia(data){
 }
 
 function glomItem(modal){
+    let host = getHostRoot();
+    let url = `${host}/media`;
     modal.mediaData.tags = modal.tagger.getTagValues();
     console.log('Item has been glommed.');
     console.log(modal.mediaData);
+    let data = modal.mediaData;
+    data.username = options.username;
+    let hed = new Headers(
+        {
+            'Content-Type': 'application/json'
+        }
+    );
+    let req = new Request(url,
+        {
+            method: 'POST',
+            headers: hed,
+            mode: 'cors',
+            body: JSON.stringify(data)
+        }
+    );
+    fetch(req).then(function(response){
+        if(response.ok){
+            console.log(response);
+        }else{
+            console.log(response);
+        }
+    });
 }
 
 function msgReceived(msg, sender){

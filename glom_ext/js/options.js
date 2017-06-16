@@ -1,4 +1,4 @@
-chrome.storage.sync.get(null, );
+chrome.storage.sync.get(null, popFields);
 document.getElementById('update-config').addEventListener('click', handler);
 
 function handler(e){
@@ -10,6 +10,7 @@ function handler(e){
             username: document.getElementById('username').value
         }
     );
+    window.close();
 }
 
 function popFields(data){

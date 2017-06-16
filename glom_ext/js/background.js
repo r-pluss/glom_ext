@@ -47,21 +47,27 @@ function handshake(data){
                 mode: 'cors'
             }
         );
-        fetch(req).then(handshakeResponse);
+        fetch(req).then(handshakeResponse).catch(fetchErr);
     }else{
         chrome.runtime.openOptionsPage();
     }
 }
 
 function handshakeResponse(response){
+    console.log(response);
     if(response.ok){
         connected = true;
         serverToken = response.json.token;
-        document.cookie = `glom_credentials=${serverToken}; max-age=604800; path=/;secure`;
+        //document.cookie = `glom_credentials=${serverToken}; max-age=604800; path=/;secure`;
         //this is a problem
-        document.cookie = `glom_user=${}`;
+        //document.cookie = `glom_user=${}`;
     }else{
         console.log(response);
         chrome.runtime.openOptionsPage();
     }
+}
+
+function fetchErr(err){
+    console.log('Fetch Error Handler');
+    console.log(err);
 }
