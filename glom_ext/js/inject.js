@@ -5,6 +5,7 @@ const service = {
     ping: ping
 };
 const existingTags = [];
+const qrySpecialCharacters = ['+', '-', '!', '&', '(', ')', '|', ','];
 
 let options;
 
@@ -53,13 +54,6 @@ function updateExistingTags(json){
     for(let tag of json.tags){
         existingTags.push(tag);
     }
-    /***purely for testing***/
-    if(existingTags.length === 0){
-        for(let fake of ['testing', 'dummy', 'not real', 'faking it']){
-            existingTags.push(fake);
-        }
-    }
-    /************************/
     window.setTimeout(getExistingTags, 90000);
 }
 
@@ -75,6 +69,7 @@ function tagMedia(data){
     let modal = picoModal(
         {
             content: '',
+            modalClass: 'tag-selector',
             width: '30vw'
         }
     );
@@ -94,9 +89,17 @@ function tagMedia(data){
 function glomItem(modal){
     let host = getHostRoot();
     let url = `${host}/media`;
-    modal.mediaData.tags = modal.tagger.getTagValues();
-    console.log('Item has been glommed.');
-    console.log(modal.mediaData);
+    let tags = modal.tagger.getTagValues();
+    for(let tag of tags){
+        for(let char of qrySpecialCharacters){
+            if(tag.indexOf(char) >= 0){
+                //reject tag for containing illegal character
+                alert(`Tags cannot contain '${char}'`);
+                return;
+            }
+        }
+    }
+    modal.mediaData.tags = tags;
     let data = modal.mediaData;
     data.username = options.username;
     let hed = new Headers(
@@ -114,8 +117,11 @@ function glomItem(modal){
     );
     fetch(req).then(function(response){
         if(response.ok){
+            console.log('Item has been glommed.', modal.mediaData);
             console.log(response);
+            modal.close();
         }else{
+            console.log('An error occurred: item was not glommed.', modal.mediaData);
             console.log(response);
         }
     });
